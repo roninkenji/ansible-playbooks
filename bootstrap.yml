@@ -3,27 +3,9 @@
   vars:
     installX: false
     slackpkg:
-      url: "http://www.slackpkg.org/stable"
-      package: slackpkg
-      arch: noarch
-      build: 1
-      filetype: txz
       mirror: "http://mirror.rise.ph/slackware/slackware64-14.2/"
   tasks:
-#   - name: Learn latest slackpkg version
-#     uri:
-#       url: "{{ slackpkg.url }}/LATEST-IS"
-#       method: GET
-#       return_content: yes
-#     register: slackpkg_version
-#   - name: Download slackpkg package
-#     get_url:
-#       url: "{{ slackpkg.url }}/{{ slackpkg_version.content }}"
-#       dest: /tmp
-#   - name: Install slackpkg
-#     shell: upgradepkg --install-new /tmp/{{ slackpkg_version.content }}
-
-  - name: ssh keys
+  - name: install ssh keys
     authorized_key:
       user: root
       state: present
@@ -63,11 +45,10 @@
   - name: update installed packages
     shell: slackpkg upgrade-all
 
-  - name: install everything else (A,AP,D,E,F,K,L,N,T,TCL,Y)
+  - name: install everything (A,AP,D,E,F,K,L,N,T,TCL,Y)
     slackpkg:
       name: slackware64/a,slackware64/ap,slackware64/d,slackware64/e,slackware64/f,slackware64/k,slakcware64/l,slackware64/n,slackware64/t,slackware64/tcl,slakcware64/y
     register: slackpkg_result
-    ignore_errors: yes
     failed_when: not ( "'No packages match the pattern' in slackpkg_result.msg" )
 
   - name: install everything else (X,XAP)
@@ -75,6 +56,4 @@
       name: slackware64/x,slackware64/xap
     when: installX == 'true'
     register: slackpkg_result
-    ignore_errors: yes
     failed_when: not ( "'No packages match the pattern' in slackpkg_result.msg" )
-
