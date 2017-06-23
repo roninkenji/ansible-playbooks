@@ -7,7 +7,7 @@
     slackpkg:
       mirror: "http://mirror.rise.ph/slackware/slackware64-14.2/"
     packages:
-      manadatory:
+      mandatory:
         - a
         - ap
         - d
