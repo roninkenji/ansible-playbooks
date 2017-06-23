@@ -1,9 +1,30 @@
 ---
 - hosts: all
   vars:
+    architecture: x86_64
+    slack_arch: slackware64
     installX: false
     slackpkg:
       mirror: "http://mirror.rise.ph/slackware/slackware64-14.2/"
+    packages:
+      manadatory:
+        - a
+        - ap
+        - d
+        - e
+        - f
+        - k
+        - l
+        - n
+        - t
+        - tcl
+        - y
+      optional:
+        - kde
+        - kdei
+        - x
+        - xap
+        - xfce
   tasks:
   - name: install ssh keys
     authorized_key:
@@ -45,15 +66,20 @@
   - name: update installed packages
     shell: slackpkg upgrade-all
 
-  - name: install everything (A,AP,D,E,F,K,L,N,T,TCL,Y)
+  - name: install mandatory packages
     slackpkg:
-      name: slackware64/a,slackware64/ap,slackware64/d,slackware64/e,slackware64/f,slackware64/k,slakcware64/l,slackware64/n,slackware64/t,slackware64/tcl,slakcware64/y
+      name: "{{ slack_arch }}/{{ item }}"
     register: slackpkg_result
     failed_when: not ( "'No packages match the pattern' in slackpkg_result.msg" )
+    with_list:
+      - "{{ packages.mandatory }}"
 
   - name: install everything else (X,XAP)
     slackpkg:
-      name: slackware64/x,slackware64/xap
+      name: "{{ slack_arch }}/{{ item }}"
     when: installX == 'true'
     register: slackpkg_result
     failed_when: not ( "'No packages match the pattern' in slackpkg_result.msg" )
+    with_list:
+      - "{{ packages.optional }}"
+
