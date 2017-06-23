@@ -71,8 +71,7 @@
       name: "{{ slack_arch }}/{{ item }}"
     register: slackpkg_result
     failed_when: not ( "'No packages match the pattern' in slackpkg_result.msg" )
-    with_list:
-      - "{{ packages.mandatory }}"
+    with_list: "{{ packages.mandatory }}"
 
   - name: install everything else (X,XAP)
     slackpkg:
@@ -80,6 +79,5 @@
     when: installX == 'true'
     register: slackpkg_result
     failed_when: not ( "'No packages match the pattern' in slackpkg_result.msg" )
-    with_list:
-      - "{{ packages.optional }}"
+    with_list: "{{ packages.optional }}"
 
