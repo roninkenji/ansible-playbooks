@@ -1,8 +1,8 @@
 ---
 - hosts: all
   vars:
-    architecture: x86_64
-    slack_arch: slackware64
+    architecture: "{{ ansible_userspace_architecture }}"
+    slack_arch: "slackware{{ ansible_userspace_bits }}"
     installX: false
     slackpkg:
       mirror: "http://mirror.rise.ph/slackware/slackware64-14.2/"
